@@ -1,0 +1,697 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{max-width:430px;margin:0 auto;padding:1rem;font-family:var(--font-sans)}
+.screen{display:none}.screen.active{display:block}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:12px}
+.btn{display:block;width:100%;padding:10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:14px;cursor:pointer;text-align:center;transition:background 0.15s}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-primary{background:#1D9E75;color:#fff;border-color:#0F6E56;font-weight:500}.btn-primary:hover{background:#0F6E56}
+.btn-danger{background:#E24B4A;color:#fff;border-color:#A32D2D}.btn-danger:hover{background:#A32D2D}
+.btn-blue{background:#378ADD;color:#fff;border-color:#185FA5;font-weight:500}.btn-blue:hover{background:#185FA5}
+.btn-sm{padding:5px 10px;width:auto;font-size:12px;display:inline-block}
+input,select{width:100%;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-size:14px;background:var(--color-background-primary);color:var(--color-text-primary);margin-bottom:8px}
+label{font-size:13px;color:var(--color-text-secondary);display:block;margin-bottom:3px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.row:last-child{border-bottom:none}
+.row-col{padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.row-col:last-child{border-bottom:none}
+.tabs{display:flex;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:14px;overflow-x:auto}
+.tab{flex-shrink:0;padding:9px 10px;font-size:12px;cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.15s}
+.tab.active{color:#1D9E75;border-bottom-color:#1D9E75;font-weight:500}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+h2{font-size:17px;font-weight:500}
+h3{font-size:14px;font-weight:500;margin-bottom:10px}
+.avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;background:#E1F5EE;color:#0F6E56}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.7rem .9rem}
+.stat-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:3px}
+.stat-val{font-size:17px;font-weight:500}
+.meal-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.meal-btn{padding:9px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;text-align:center;background:var(--color-background-primary);color:var(--color-text-secondary);transition:all 0.15s}
+.meal-btn.ck{background:#E1F5EE;border-color:#1D9E75;color:#0F6E56;font-weight:500}
+.chip-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.chip{padding:4px 10px;border:0.5px solid var(--color-border-secondary);border-radius:999px;font-size:12px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary);transition:all 0.15s}
+.chip.sel{background:#E1F5EE;border-color:#1D9E75;color:#0F6E56}
+.chip.selb{background:#E6F1FB;border-color:#378ADD;color:#185FA5}
+.ok{background:#EAF3DE;color:#3B6D11;padding:9px;border-radius:var(--border-radius-md);font-size:13px;margin-bottom:8px;display:none}
+.errmsg{color:#A32D2D;font-size:13px;margin-top:4px;display:none}
+.mbrow{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.mbrow:last-child{border-bottom:none}
+.pos{color:#1D9E75;font-weight:500}.neg{color:#E24B4A;font-weight:500}.blue{color:#378ADD;font-weight:500}
+.badge{display:inline-block;padding:2px 7px;border-radius:999px;font-size:11px;background:#E6F1FB;color:#185FA5;margin-left:5px}
+.badge-amber{background:#FAEEDA;color:#854F0B}
+.fam-summary{background:linear-gradient(135deg,#E6F1FB 0%,#EAF3DE 100%);border:0.5px solid #b3d4f5;border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:12px}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:10px 0}
+.feed-item{padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.feed-item:last-child{border-bottom:none}
+.feed-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.feed-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.feed-name{font-size:13px;font-weight:500}
+.feed-desc{font-size:13px;color:var(--color-text-secondary);padding-left:36px}
+.feed-amount{font-size:13px;font-weight:500;padding-left:36px;margin-top:2px}
+.section-sep{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;padding:10px 0 4px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:4px}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;margin-right:4px}
+.pill-green{background:#EAF3DE;color:#3B6D11}
+.pill-blue{background:#E6F1FB;color:#185FA5}
+.pill-amber{background:#FAEEDA;color:#854F0B}
+.info-box{background:#FFF8E7;border:0.5px solid #F5C96A;border-radius:var(--border-radius-md);padding:10px 12px;font-size:12px;color:#854F0B;margin-bottom:10px;line-height:1.5}
+</style>
+
+<div class="app">
+
+<!-- LOGIN -->
+<div id="s-login" class="screen active">
+  <div style="text-align:center;padding:2rem 0 1.5rem">
+    <div style="font-size:34px;margin-bottom:8px">🏠</div>
+    <h2 style="font-size:20px">Chi tiêu gia đình</h2>
+    <p style="font-size:13px;color:var(--color-text-secondary);margin-top:4px">Tiền chợ · Sinh hoạt · Chi tiêu gia đình</p>
+  </div>
+  <div class="card">
+    <label>Chọn thành viên</label>
+    <select id="login-user"><option value="">-- Chọn --</option></select>
+    <label>Mật khẩu</label>
+    <input type="password" id="login-pass" placeholder="Nhập mật khẩu"/>
+    <div class="errmsg" id="login-err">Sai mật khẩu hoặc chưa chọn</div>
+    <button class="btn btn-primary" style="margin-top:8px" onclick="doLogin()">Đăng nhập</button>
+  </div>
+  <p style="text-align:center;font-size:12px;color:var(--color-text-secondary)">Lần đầu: <b>Admin</b> / <b>admin123</b></p>
+</div>
+
+<!-- MAIN USER -->
+<div id="s-main" class="screen">
+  <div class="header">
+    <div style="display:flex;align-items:center;gap:9px">
+      <div class="avatar" id="main-av">?</div>
+      <div>
+        <div style="font-size:15px;font-weight:500" id="main-name"></div>
+        <div style="font-size:12px;color:var(--color-text-secondary)" id="main-sub"></div>
+      </div>
+    </div>
+    <button class="btn btn-sm" onclick="logout()">Thoát</button>
+  </div>
+  <div class="tabs" id="main-tabs">
+    <div class="tab active" onclick="switchTab('t-ov',this)">Tổng quan</div>
+    <div class="tab" onclick="switchTab('t-public',this)">👁 Xem chung</div>
+    <div class="tab" onclick="switchTab('t-mkt',this)">Tiền chợ</div>
+    <div class="tab" onclick="switchTab('t-meal',this)">Bữa ăn</div>
+    <div class="tab" onclick="switchTab('t-exp',this)">Chi phí</div>
+    <div class="tab" id="tab-fam" onclick="switchTab('t-fam',this)" style="display:none">Gia đình</div>
+  </div>
+
+  <div id="t-ov">
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-label">Tôi đã trả hộ</div><div class="stat-val pos" id="ov-paid">0đ</div></div>
+      <div class="stat"><div class="stat-label">Tôi còn nợ</div><div class="stat-val neg" id="ov-owe">0đ</div></div>
+    </div>
+    <div class="card"><h3>Chi tiết cá nhân tháng này</h3><div id="ov-detail"></div></div>
+    <div class="fam-summary" id="ov-fam" style="display:none">
+      <h3 style="margin-bottom:10px">🏡 Tổng chi tiêu gia đình <span id="ov-fam-name" class="badge"></span></h3>
+      <div id="ov-fam-detail"></div>
+    </div>
+    <div class="card"><h3>Bữa ăn của tôi</h3><div id="ov-meals" style="font-size:13px;color:var(--color-text-secondary)">Chưa có</div></div>
+  </div>
+
+  <div id="t-public" style="display:none">
+    <div class="card" style="margin-bottom:8px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-sm" id="pf-all" onclick="setFeedFilter('all',this)" style="background:#1D9E75;color:#fff;border-color:#0F6E56">Tất cả</button>
+        <button class="btn btn-sm" id="pf-mkt" onclick="setFeedFilter('mkt',this)">🛒 Tiền chợ</button>
+        <button class="btn btn-sm" id="pf-exp" onclick="setFeedFilter('exp',this)">⚡ Chi phí</button>
+        <button class="btn btn-sm" id="pf-fam" onclick="setFeedFilter('fam',this)">🏡 Gia đình</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <h3 style="margin-bottom:0">Lịch sử tháng này</h3>
+        <div id="pf-total-badge" style="font-size:13px;font-weight:500;color:#1D9E75"></div>
+      </div>
+      <div id="public-feed">Đang tải...</div>
+    </div>
+    <div class="card"><h3>Tóm tắt theo người</h3><div id="public-per-person"></div></div>
+  </div>
+
+  <div id="t-mkt" style="display:none">
+    <div class="info-box">💡 <b>Lưu ý:</b> Nếu một bữa không ai tích ăn, tiền bữa đó sẽ chia đều cho <b>tất cả</b> thành viên (đồ đã mua rồi).</div>
+    <div class="card">
+      <h3>Thêm chi phí chợ</h3>
+      <label>Ngày</label><input type="date" id="mkt-date"/>
+      <label>Áp dụng bữa nào?</label>
+      <div class="meal-grid">
+        <div class="meal-btn" id="mb-sang" onclick="tog('sang','mS')">☀️ Sáng</div>
+        <div class="meal-btn" id="mb-trua" onclick="tog('trua','mS')">🌤 Trưa</div>
+        <div class="meal-btn" id="mb-chieu" onclick="tog('chieu','mS')">🌇 Chiều</div>
+        <div class="meal-btn" id="mb-toi" onclick="tog('toi','mS')">🌙 Tối</div>
+      </div>
+      <label>Người bỏ tiền mua</label>
+      <div class="chip-wrap" id="mkt-payers"></div>
+      <label>Tổng tiền (đ)</label><input type="number" id="mkt-amount" placeholder="250000"/>
+      <label>Ghi chú</label><input type="text" id="mkt-note" placeholder="Rau củ, thịt cá..."/>
+      <div class="ok" id="mkt-ok">Đã lưu!</div>
+      <button class="btn btn-primary" onclick="addMarket()">Lưu chi phí chợ</button>
+    </div>
+    <div class="card"><h3>Lịch sử của tôi</h3><div id="mkt-hist" style="font-size:13px;color:var(--color-text-secondary)">Chưa có</div></div>
+  </div>
+
+  <div id="t-meal" style="display:none">
+    <div class="card">
+      <h3>Tích bữa ăn</h3>
+      <label>Ngày</label><input type="date" id="meal-date"/>
+      <label>Bữa nào?</label>
+      <div class="meal-grid">
+        <div class="meal-btn" id="ma-sang" onclick="tog('sang','mA')">☀️ Sáng</div>
+        <div class="meal-btn" id="ma-trua" onclick="tog('trua','mA')">🌤 Trưa</div>
+        <div class="meal-btn" id="ma-chieu" onclick="tog('chieu','mA')">🌇 Chiều</div>
+        <div class="meal-btn" id="ma-toi" onclick="tog('toi','mA')">🌙 Tối</div>
+      </div>
+      <div class="ok" id="meal-ok">Đã lưu!</div>
+      <button class="btn btn-primary" onclick="saveMeal()">Lưu bữa ăn</button>
+    </div>
+    <div class="card"><h3>Lịch sử bữa ăn</h3><div id="meal-hist" style="font-size:13px;color:var(--color-text-secondary)">Chưa có</div></div>
+  </div>
+
+  <div id="t-exp" style="display:none">
+    <div class="card">
+      <h3>Thêm chi phí chung</h3>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:10px">Điện, nước, internet... chia đều tất cả thành viên</p>
+      <label>Số tiền (đ)</label><input type="number" id="exp-amount" placeholder="500000"/>
+      <label>Ghi chú</label><input type="text" id="exp-note" placeholder="Tiền điện tháng 5..."/>
+      <div class="ok" id="exp-ok">Đã lưu!</div>
+      <button class="btn btn-primary" onclick="addExp()">Lưu</button>
+    </div>
+    <div class="card"><h3>Chi phí chung tháng này</h3><div id="exp-hist" style="font-size:13px;color:var(--color-text-secondary)">Chưa có</div></div>
+  </div>
+
+  <div id="t-fam" style="display:none">
+    <div class="card" id="fam-info"></div>
+    <div class="card">
+      <h3>Thêm chi tiêu riêng gia đình</h3>
+      <label>Danh mục</label>
+      <select id="fam-cat">
+        <option value="mua-sam">🛍 Mua sắm</option>
+        <option value="giao-duc">📚 Giáo dục</option>
+        <option value="y-te">🏥 Y tế</option>
+        <option value="du-lich">✈️ Du lịch / giải trí</option>
+        <option value="khac">📦 Khác</option>
+      </select>
+      <label>Số tiền (đ)</label><input type="number" id="fam-amount" placeholder="1500000"/>
+      <label>Ngày</label><input type="date" id="fam-date"/>
+      <label>Ghi chú</label><input type="text" id="fam-note" placeholder="Học phí tháng 5..."/>
+      <div class="ok" id="fam-ok">Đã lưu!</div>
+      <button class="btn btn-blue" onclick="addFamExp()">Lưu chi tiêu gia đình</button>
+    </div>
+    <div class="card"><h3>Lịch sử tháng này</h3><div id="fam-hist" style="font-size:13px;color:var(--color-text-secondary)">Chưa có</div></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="s-admin" class="screen">
+  <div class="header"><h2>⚙️ Quản trị</h2><button class="btn btn-sm" onclick="logout()">Thoát</button></div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchAdm('adm-members',this)">Thành viên</div>
+    <div class="tab" onclick="switchAdm('adm-fam',this)">Gia đình</div>
+    <div class="tab" onclick="switchAdm('adm-settle',this)">Quyết toán</div>
+    <div class="tab" onclick="switchAdm('adm-data',this)">Dữ liệu</div>
+  </div>
+  <div id="adm-members">
+    <div class="card">
+      <h3>Thêm thành viên</h3>
+      <label>Tên</label><input type="text" id="adm-name" placeholder="Nguyễn Văn A"/>
+      <label>Mật khẩu</label><input type="password" id="adm-pass" placeholder="Mật khẩu"/>
+      <label>Vai trò</label>
+      <select id="adm-role"><option value="member">Thành viên</option><option value="admin">Admin</option></select>
+      <div class="ok" id="adm-ok">Đã thêm!</div>
+      <button class="btn btn-primary" onclick="addMember()">Thêm</button>
+    </div>
+    <div class="card"><h3>Danh sách (<span id="mem-count">0</span>)</h3><div id="mem-list"></div></div>
+  </div>
+  <div id="adm-fam" style="display:none">
+    <div class="card">
+      <h3>Tạo gia đình / nhóm</h3>
+      <label>Tên nhóm</label><input type="text" id="fn-name" placeholder="Gia đình anh Hai"/>
+      <label>Chọn thành viên</label>
+      <div class="chip-wrap" id="fn-chips"></div>
+      <div class="ok" id="fn-ok">Đã tạo!</div>
+      <button class="btn btn-blue" onclick="createFam()">Tạo gia đình</button>
+    </div>
+    <div class="card"><h3>Danh sách gia đình</h3><div id="fam-list"></div></div>
+  </div>
+  <div id="adm-settle" style="display:none">
+    <div class="card"><h3>Quyết toán chung</h3><div id="set-summary"></div></div>
+    <div class="card"><h3>Ai nợ ai?</h3><div id="set-debts"></div></div>
+    <div class="card">
+      <h3>🏡 Tổng chi tiêu từng gia đình</h3>
+      <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px">= Tiền ăn + sinh hoạt chia đầu người + chi tiêu riêng</p>
+      <div id="set-fam"></div>
+    </div>
+    <button class="btn btn-danger" style="margin-top:4px" onclick="closeMonth()">Kết tháng & xoá dữ liệu cũ</button>
+  </div>
+  <div id="adm-data" style="display:none">
+    <div class="card"><h3>Chi phí chợ</h3><div id="all-mkt" style="font-size:13px"></div></div>
+    <div class="card"><h3>Chi phí chung</h3><div id="all-exp" style="font-size:13px"></div></div>
+    <div class="card"><h3>Chi tiêu gia đình</h3><div id="all-fexp" style="font-size:13px"></div></div>
+    <div class="card"><h3>Bữa ăn</h3><div id="all-meals" style="font-size:13px"></div></div>
+  </div>
+</div>
+</div>
+
+<script>
+let S={users:[],market:[],meals:[],expenses:[],families:[],famExp:[]};
+let CU=null;
+let mS={sang:0,trua:0,chieu:0,toi:0};
+let mA={sang:0,trua:0,chieu:0,toi:0};
+let feedFilter='all';
+
+const fmt=n=>Number(Math.round(n)).toLocaleString('vi-VN')+'đ';
+const M=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0');};
+const today=()=>new Date().toISOString().slice(0,10);
+const mo=s=>s.slice(0,7);
+const ML=m=>({sang:'☀️Sáng',trua:'🌤Trưa',chieu:'🌇Chiều',toi:'🌙Tối'}[m]||m);
+const CL=c=>({'mua-sam':'🛍Mua sắm','giao-duc':'📚Giáo dục','y-te':'🏥Y tế','du-lich':'✈️Du lịch','khac':'📦Khác'}[c]||c);
+
+function uColor(i){return ['background:#E1F5EE;color:#0F6E56','background:#E6F1FB;color:#185FA5','background:#FAEEDA;color:#854F0B','background:#F3E8FF;color:#6B21A8','background:#FCE7F3;color:#9D174D'][i%5];}
+function uInitial(i){return S.users[i]?.name.charAt(0).toUpperCase()||'?';}
+
+async function load(){
+  try{const r=await window.storage.get('hh6',true);if(r&&r.value)S=JSON.parse(r.value);}catch(e){}
+  ['families','famExp','expenses','meals','market','users'].forEach(k=>{if(!S[k])S[k]=[];});
+  if(!S.users.length){S.users=[{name:'Admin',pass:'admin123',role:'admin'}];await sv();}
+  renderLogin();
+}
+async function sv(){try{await window.storage.set('hh6',JSON.stringify(S),true);}catch(e){}}
+
+const myFam=()=>S.families.find(f=>f.members.includes(CU));
+
+function renderLogin(){
+  const sel=document.getElementById('login-user');
+  sel.innerHTML='<option value="">-- Chọn --</option>';
+  S.users.forEach((u,i)=>sel.innerHTML+=`<option value="${i}">${u.name}${u.role==='admin'?' (Admin)':''}</option>`);
+  document.getElementById('login-pass').value='';
+}
+
+function doLogin(){
+  const idx=document.getElementById('login-user').value;
+  const pass=document.getElementById('login-pass').value;
+  const err=document.getElementById('login-err');
+  if(idx===''){err.style.display='block';return;}
+  const u=S.users[parseInt(idx)];
+  if(u.pass!==pass){err.style.display='block';return;}
+  err.style.display='none';CU=parseInt(idx);
+  u.role==='admin'?showAdmin():showMain();
+}
+
+function logout(){CU=null;mS={sang:0,trua:0,chieu:0,toi:0};mA={sang:0,trua:0,chieu:0,toi:0};feedFilter='all';showScreen('s-login');renderLogin();}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function showMain(){
+  showScreen('s-main');
+  const u=S.users[CU];
+  const av=document.getElementById('main-av');
+  av.textContent=uInitial(CU);av.style.cssText=uColor(CU);
+  document.getElementById('main-name').textContent=u.name;
+  const m=M();
+  document.getElementById('main-sub').textContent='Tháng '+m.split('-')[1]+'/'+m.split('-')[0];
+  const fam=myFam();
+  const ft=document.getElementById('tab-fam');
+  ft.style.display=fam?'':'none';
+  if(fam)ft.textContent='🏡 '+fam.name;
+  ['mkt-date','meal-date','fam-date'].forEach(id=>document.getElementById(id).value=today());
+  renderMktPayers();renderOv();renderPublicFeed();renderMktHist();renderMealHist();renderExpHist();renderFamTab();
+}
+function showAdmin(){showScreen('s-admin');renderMemList();renderFamManage();renderSettle();renderAllData();}
+
+function switchTab(id,el){
+  ['t-ov','t-public','t-mkt','t-meal','t-exp','t-fam'].forEach(t=>document.getElementById(t).style.display=t===id?'block':'none');
+  document.querySelectorAll('#main-tabs .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  if(id==='t-public')renderPublicFeed();
+}
+function switchAdm(id,el){
+  ['adm-members','adm-fam','adm-settle','adm-data'].forEach(t=>document.getElementById(t).style.display=t===id?'block':'none');
+  document.querySelectorAll('#s-admin .tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  if(id==='adm-settle')renderSettle();if(id==='adm-data')renderAllData();if(id==='adm-fam')renderFamManage();
+}
+
+function tog(k,obj){
+  if(obj==='mS'){mS[k]=mS[k]?0:1;document.getElementById('mb-'+k).classList.toggle('ck',!!mS[k]);}
+  else{mA[k]=mA[k]?0:1;document.getElementById('ma-'+k).classList.toggle('ck',!!mA[k]);}
+}
+
+// ===== KEY FIX: calcFoodShare =====
+// Với mỗi bữa trong một lần mua chợ:
+//   - Nếu có người ăn bữa đó → chia cho người ăn
+//   - Nếu KHÔNG có ai ăn bữa đó → chia đều cho TẤT CẢ thành viên
+function calcFoodShare(uid, m){
+  const n = S.users.length || 1;
+  let share = 0;
+  S.market.filter(x=>x.month===m).forEach(mkt=>{
+    const perMeal = mkt.amount / mkt.meals.length;
+    mkt.meals.forEach(meal=>{
+      const eaters = S.meals
+        .filter(ml=>ml.month===m && ml.meals.includes(meal) && ml.date===mkt.date)
+        .map(ml=>ml.user);
+      if(eaters.length > 0){
+        // ai ăn thì chia cho người ăn
+        if(eaters.includes(uid)) share += perMeal / eaters.length;
+      } else {
+        // không ai ăn → chia đều tất cả (đồ đã mua rồi)
+        share += perMeal / n;
+      }
+    });
+  });
+  return share;
+}
+
+function calcPersonal(uid, m){
+  const food = calcFoodShare(uid, m);
+  const totalExp = S.expenses.filter(x=>x.month===m).reduce((s,x)=>s+x.amount, 0);
+  const shared = totalExp / (S.users.length || 1);
+  let paid = 0;
+  S.market.filter(x=>x.month===m && x.payers.includes(uid)).forEach(x=>paid += x.pp);
+  return {food, shared, total: food+shared, paid, net: paid-(food+shared)};
+}
+
+function calcFamily(fam, m){
+  let memberShare = 0;
+  fam.members.forEach(uid=>{const p=calcPersonal(uid,m);memberShare+=p.total;});
+  const ownExp = S.famExp.filter(x=>x.fid===fam.id&&x.month===m).reduce((s,x)=>s+x.amount, 0);
+  const bycat = {};
+  S.famExp.filter(x=>x.fid===fam.id&&x.month===m).forEach(x=>{bycat[x.cat]=(bycat[x.cat]||0)+x.amount;});
+  return {memberShare, ownExp, total: memberShare+ownExp, bycat};
+}
+
+function renderOv(){
+  const m=M(); const p=calcPersonal(CU,m);
+  const iOwe=Math.max(0,-p.net); const iAmOwed=Math.max(0,p.net);
+  document.getElementById('ov-paid').textContent=fmt(p.paid);
+  document.getElementById('ov-owe').textContent=fmt(iOwe);
+  document.getElementById('ov-detail').innerHTML=`
+    <div class="row"><span style="font-size:13px">Phần tiền ăn của tôi</span><span style="font-size:13px;font-weight:500">${fmt(p.food)}</span></div>
+    <div class="row"><span style="font-size:13px">Phần chi phí chung</span><span style="font-size:13px;font-weight:500">${fmt(p.shared)}</span></div>
+    <div class="row"><span style="font-size:13px;font-weight:500">Tổng phải trả</span><span style="font-weight:500">${fmt(p.total)}</span></div>
+    <div class="row"><span style="font-size:13px">Đã trả hộ</span><span class="pos">${fmt(p.paid)}</span></div>
+    ${iAmOwed>1?`<div class="row"><span style="font-size:13px">Người khác nợ tôi</span><span class="pos">${fmt(iAmOwed)}</span></div>`:''}
+    ${iOwe>1?`<div class="row"><span style="font-size:13px">Tôi còn nợ</span><span class="neg">${fmt(iOwe)}</span></div>`:''}
+  `;
+  const fam=myFam(); const fc=document.getElementById('ov-fam');
+  if(fam){
+    fc.style.display='block'; document.getElementById('ov-fam-name').textContent=fam.name;
+    const fc2=calcFamily(fam,m);
+    let html=`<div class="row"><span style="font-size:13px">Tiền ăn + sinh hoạt (các thành viên)</span><span style="font-size:13px;font-weight:500">${fmt(fc2.memberShare)}</span></div>`;
+    Object.entries(fc2.bycat).forEach(([k,v])=>{html+=`<div class="row"><span style="font-size:13px">${CL(k)}</span><span style="font-size:13px;font-weight:500">${fmt(v)}</span></div>`;});
+    html+=`<div class="row"><span style="font-size:14px;font-weight:500">Tổng chi tiêu gia đình</span><span style="font-size:15px;font-weight:600;color:#185FA5">${fmt(fc2.total)}</span></div>`;
+    document.getElementById('ov-fam-detail').innerHTML=html;
+  } else fc.style.display='none';
+  const myMeals=S.meals.filter(x=>x.month===m&&x.user===CU);
+  const mealEl=document.getElementById('ov-meals');
+  if(!myMeals.length) mealEl.textContent='Chưa tích bữa ăn nào';
+  else{const t=myMeals.reduce((s,x)=>s+x.meals.length,0);mealEl.innerHTML=`<b>${t} bữa</b> trong ${myMeals.length} ngày`;}
+}
+
+function setFeedFilter(f,el){
+  feedFilter=f;
+  ['pf-all','pf-mkt','pf-exp','pf-fam'].forEach(id=>{
+    const btn=document.getElementById(id);
+    const active=id==='pf-'+f;
+    btn.style.background=active?'#1D9E75':''; btn.style.color=active?'#fff':''; btn.style.borderColor=active?'#0F6E56':'';
+  });
+  renderPublicFeed();
+}
+
+function renderPublicFeed(){
+  const m=M(); let items=[];
+  if(feedFilter==='all'||feedFilter==='mkt'){
+    S.market.filter(x=>x.month===m).forEach(x=>{items.push({type:'mkt',date:x.date,amount:x.amount,by:x.payers,note:x.note,meals:x.meals,obj:x});});
+  }
+  if(feedFilter==='all'||feedFilter==='exp'){
+    S.expenses.filter(x=>x.month===m).forEach(x=>{items.push({type:'exp',date:today(),amount:x.amount,by:[x.by],note:x.note,obj:x});});
+  }
+  if(feedFilter==='all'||feedFilter==='fam'){
+    S.famExp.filter(x=>x.month===m).forEach(x=>{
+      const fam=S.families.find(f=>f.id===x.fid);
+      items.push({type:'fam',date:x.date,amount:x.amount,by:[x.by],note:x.note,cat:x.cat,fam:fam?.name||'?',obj:x});
+    });
+  }
+  items.sort((a,b)=>b.date.localeCompare(a.date));
+  const total=items.reduce((s,x)=>s+x.amount,0);
+  document.getElementById('pf-total-badge').textContent='Tổng: '+fmt(total);
+  const el=document.getElementById('public-feed');
+  if(!items.length){el.innerHTML='<p style="font-size:13px;color:var(--color-text-secondary);padding:8px 0">Chưa có dữ liệu</p>';renderPublicPerPerson();return;}
+  let html=''; let lastDate='';
+  items.forEach(item=>{
+    if(item.date!==lastDate){html+=`<div class="section-sep">${item.date}</div>`;lastDate=item.date;}
+    if(item.type==='mkt'){
+      // show which meals had no eaters
+      const noEaterMeals=item.meals.filter(meal=>{
+        const eaters=S.meals.filter(ml=>ml.month===m&&ml.meals.includes(meal)&&ml.date===item.date);
+        return eaters.length===0;
+      });
+      const noEaterNote=noEaterMeals.length?`<span style="font-size:11px;color:#854F0B"> · ${noEaterMeals.map(ML).join(' ')} không ai ăn → chia đều</span>`:'';
+      html+=`<div class="feed-item">
+        <div class="feed-header">
+          ${item.by.map(i=>`<div class="feed-av" style="${uColor(i)}">${uInitial(i)}</div>`).join('')}
+          <div><span class="feed-name">${item.by.map(i=>S.users[i]?.name||'?').join(', ')}</span><span style="font-size:11px;color:var(--color-text-secondary);margin-left:6px">đi chợ</span></div>
+          <span style="margin-left:auto"><span class="pill pill-green">${item.meals.map(ML).join(' ')}</span></span>
+        </div>
+        <div class="feed-desc">${item.note||'Không ghi chú'}${noEaterNote}</div>
+        <div class="feed-amount pos">+ ${fmt(item.amount)}</div>
+      </div>`;
+    } else if(item.type==='exp'){
+      html+=`<div class="feed-item">
+        <div class="feed-header">
+          <div class="feed-av" style="${uColor(item.by[0])}">${uInitial(item.by[0])}</div>
+          <div><span class="feed-name">${S.users[item.by[0]]?.name||'?'}</span><span style="font-size:11px;color:var(--color-text-secondary);margin-left:6px">chi phí chung</span></div>
+          <span class="pill pill-blue">⚡</span>
+        </div>
+        <div class="feed-desc">${item.note||'Chi phí chung'}</div>
+        <div class="feed-amount blue">+ ${fmt(item.amount)} <span style="font-size:11px;font-weight:400;color:var(--color-text-secondary)">(mỗi người ${fmt(item.amount/(S.users.length||1))})</span></div>
+      </div>`;
+    } else if(item.type==='fam'){
+      html+=`<div class="feed-item">
+        <div class="feed-header">
+          <div class="feed-av" style="${uColor(item.by[0])}">${uInitial(item.by[0])}</div>
+          <div><span class="feed-name">${S.users[item.by[0]]?.name||'?'}</span><span style="font-size:11px;color:var(--color-text-secondary);margin-left:6px">chi tiêu gia đình</span></div>
+          <span class="pill pill-amber">🏡 ${item.fam}</span>
+        </div>
+        <div class="feed-desc">${item.note||CL(item.cat)} · ${CL(item.cat)}</div>
+        <div class="feed-amount" style="color:#854F0B">+ ${fmt(item.amount)}</div>
+      </div>`;
+    }
+  });
+  el.innerHTML=html;
+  renderPublicPerPerson();
+}
+
+function renderPublicPerPerson(){
+  const m=M(); const el=document.getElementById('public-per-person');
+  const stats=S.users.map((_,i)=>{
+    let mktPaid=0; S.market.filter(x=>x.month===m&&x.payers.includes(i)).forEach(x=>mktPaid+=x.pp);
+    let expPaid=0; S.expenses.filter(x=>x.month===m&&x.by===i).forEach(x=>expPaid+=x.amount);
+    let famPaid=0; S.famExp.filter(x=>x.month===m&&x.by===i).forEach(x=>famPaid+=x.amount);
+    return{idx:i,mktPaid,expPaid,famPaid,total:mktPaid+expPaid+famPaid};
+  }).filter(x=>x.total>0).sort((a,b)=>b.total-a.total);
+  if(!stats.length){el.innerHTML='<p style="font-size:13px;color:var(--color-text-secondary)">Chưa có</p>';return;}
+  el.innerHTML=stats.map(s=>`
+    <div class="mbrow">
+      <div style="${uColor(s.idx)};width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0">${uInitial(s.idx)}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:500">${S.users[s.idx]?.name||'?'}</div>
+        <div style="font-size:11px;color:var(--color-text-secondary)">
+          ${s.mktPaid>0?`🛒 ${fmt(s.mktPaid)}`:''}${s.expPaid>0?` ⚡ ${fmt(s.expPaid)}`:''}${s.famPaid>0?` 🏡 ${fmt(s.famPaid)}`:''}
+        </div>
+      </div>
+      <span style="font-size:14px;font-weight:600;color:#1D9E75">${fmt(s.total)}</span>
+    </div>`).join('');
+}
+
+function renderMktPayers(){
+  const w=document.getElementById('mkt-payers'); w.innerHTML='';
+  S.users.forEach((u,i)=>{
+    const c=document.createElement('div'); c.className='chip'+(i===CU?' sel':'');
+    c.textContent=u.name; c.dataset.i=i; c.onclick=()=>c.classList.toggle('sel'); w.appendChild(c);
+  });
+}
+
+async function addMarket(){
+  const date=document.getElementById('mkt-date').value;
+  const amount=parseFloat(document.getElementById('mkt-amount').value);
+  const note=document.getElementById('mkt-note').value;
+  const meals=Object.keys(mS).filter(k=>mS[k]);
+  const payers=[...document.querySelectorAll('#mkt-payers .chip.sel')].map(c=>parseInt(c.dataset.i));
+  if(!date||!amount||!meals.length||!payers.length){alert('Điền đủ: bữa ăn, người trả, số tiền');return;}
+  S.market.push({date,amount,note,meals,payers,pp:amount/payers.length,month:mo(date),by:CU});
+  await sv();
+  document.getElementById('mkt-amount').value=''; document.getElementById('mkt-note').value='';
+  mS={sang:0,trua:0,chieu:0,toi:0}; ['sang','trua','chieu','toi'].forEach(m=>document.getElementById('mb-'+m).classList.remove('ck'));
+  renderMktPayers(); flash('mkt-ok'); renderMktHist(); renderOv();
+}
+
+async function saveMeal(){
+  const date=document.getElementById('meal-date').value;
+  const meals=Object.keys(mA).filter(k=>mA[k]);
+  if(!date||!meals.length){alert('Chọn ngày và ít nhất một bữa');return;}
+  const ex=S.meals.find(m=>m.user===CU&&m.date===date);
+  if(ex){ex.meals=[...new Set([...ex.meals,...meals])];ex.month=mo(date);}
+  else S.meals.push({user:CU,date,meals,month:mo(date)});
+  await sv();
+  mA={sang:0,trua:0,chieu:0,toi:0}; ['sang','trua','chieu','toi'].forEach(m=>document.getElementById('ma-'+m).classList.remove('ck'));
+  flash('meal-ok'); renderMealHist(); renderOv();
+}
+
+async function addExp(){
+  const amount=parseFloat(document.getElementById('exp-amount').value);
+  const note=document.getElementById('exp-note').value;
+  if(!amount){alert('Nhập số tiền');return;}
+  S.expenses.push({amount,note,month:M(),by:CU});
+  await sv();
+  document.getElementById('exp-amount').value=''; document.getElementById('exp-note').value='';
+  flash('exp-ok'); renderExpHist(); renderOv();
+}
+
+async function addFamExp(){
+  const fam=myFam(); if(!fam){alert('Bạn chưa thuộc gia đình nào');return;}
+  const amount=parseFloat(document.getElementById('fam-amount').value);
+  const note=document.getElementById('fam-note').value;
+  const cat=document.getElementById('fam-cat').value;
+  const date=document.getElementById('fam-date').value;
+  if(!amount||!date){alert('Nhập đủ số tiền và ngày');return;}
+  S.famExp.push({fid:fam.id,amount,note,cat,date,month:mo(date),by:CU});
+  await sv();
+  document.getElementById('fam-amount').value=''; document.getElementById('fam-note').value='';
+  flash('fam-ok'); renderFamTab(); renderOv();
+}
+
+function flash(id){const el=document.getElementById(id);el.style.display='block';setTimeout(()=>el.style.display='none',2000);}
+
+function renderMktHist(){
+  const m=M(); const list=S.market.filter(x=>x.month===m&&x.payers.includes(CU)); const el=document.getElementById('mkt-hist');
+  if(!list.length){el.textContent='Chưa có';return;}
+  el.innerHTML=list.map(x=>`<div class="row-col"><div style="display:flex;justify-content:space-between"><span style="font-weight:500;font-size:13px">${x.date}</span><span class="pos">${fmt(x.amount)}</span></div><div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">${x.note||'—'} · ${x.meals.map(ML).join(' ')}</div><div style="font-size:12px;color:var(--color-text-secondary)">Trả cùng: ${x.payers.map(i=>S.users[i]?.name||'?').join(', ')}</div></div>`).join('');
+}
+
+function renderMealHist(){
+  const m=M(); const list=S.meals.filter(x=>x.month===m&&x.user===CU); const el=document.getElementById('meal-hist');
+  if(!list.length){el.textContent='Chưa có';return;}
+  el.innerHTML=list.map(x=>`<div class="row"><span style="font-size:13px">${x.date}</span><span style="font-size:13px">${x.meals.map(ML).join(' ')}</span></div>`).join('');
+}
+
+function renderExpHist(){
+  const m=M(); const list=S.expenses.filter(x=>x.month===m); const el=document.getElementById('exp-hist');
+  if(!list.length){el.textContent='Chưa có';return;}
+  const total=list.reduce((s,x)=>s+x.amount,0); const n=S.users.length||1;
+  el.innerHTML=list.map(x=>`<div class="row"><div><span style="font-size:13px">${x.note||'Chi phí chung'}</span><br><span style="font-size:11px;color:var(--color-text-secondary)">bởi ${S.users[x.by]?.name||'?'}</span></div><span style="font-weight:500">${fmt(x.amount)}</span></div>`).join('')
+    +`<div class="row"><span style="font-size:13px;font-weight:500">Phần của tôi</span><span class="neg">${fmt(total/n)}</span></div>`;
+}
+
+function renderFamTab(){
+  const fam=myFam(); if(!fam)return;
+  document.getElementById('fam-info').innerHTML=`<h3 style="margin-bottom:6px">🏡 ${fam.name}</h3><div style="font-size:13px;color:var(--color-text-secondary)">Thành viên: ${fam.members.map(i=>S.users[i]?.name||'?').join(' · ')}</div>`;
+  const m=M(); const list=S.famExp.filter(x=>x.fid===fam.id&&x.month===m); const el=document.getElementById('fam-hist');
+  if(!list.length){el.textContent='Chưa có chi tiêu riêng';return;}
+  const total=list.reduce((s,x)=>s+x.amount,0);
+  el.innerHTML=list.map(x=>`<div class="row"><div><span style="font-size:13px;font-weight:500">${x.note||CL(x.cat)}</span><br><span style="font-size:12px;color:var(--color-text-secondary)">${CL(x.cat)} · ${x.date} · ${S.users[x.by]?.name||'?'}</span></div><span class="blue">${fmt(x.amount)}</span></div>`).join('')
+    +`<div class="row"><span style="font-size:13px;font-weight:500">Tổng riêng</span><span class="blue">${fmt(total)}</span></div>`;
+}
+
+async function addMember(){
+  const name=document.getElementById('adm-name').value.trim();
+  const pass=document.getElementById('adm-pass').value;
+  const role=document.getElementById('adm-role').value;
+  if(!name||!pass){alert('Nhập đủ tên và mật khẩu');return;}
+  S.users.push({name,pass,role}); await sv();
+  document.getElementById('adm-name').value=''; document.getElementById('adm-pass').value='';
+  flash('adm-ok'); renderMemList(); renderLogin(); renderFamManage();
+}
+
+function renderMemList(){
+  document.getElementById('mem-count').textContent=S.users.length;
+  document.getElementById('mem-list').innerHTML=S.users.map((u,i)=>{
+    const f=S.families.find(f=>f.members.includes(i));
+    return`<div class="mbrow"><div class="avatar" style="${uColor(i)}">${uInitial(i)}</div><div style="flex:1"><div style="font-size:14px;font-weight:500">${u.name}${u.role==='admin'?'<span class="badge">Admin</span>':''}</div><div style="font-size:12px;color:var(--color-text-secondary)">${f?f.name:'Chưa có nhóm'}</div></div>${i>0?`<button class="btn btn-sm btn-danger" onclick="removeMember(${i})">Xoá</button>`:''}</div>`;
+  }).join('');
+}
+
+async function removeMember(i){
+  if(!confirm('Xoá thành viên này?'))return;
+  S.users.splice(i,1);
+  S.families.forEach(f=>{f.members=f.members.filter(m=>m!==i).map(m=>m>i?m-1:m);});
+  await sv(); renderMemList(); renderLogin(); renderFamManage();
+}
+
+function renderFamManage(){
+  const w=document.getElementById('fn-chips'); w.innerHTML='';
+  S.users.forEach((u,i)=>{const c=document.createElement('div');c.className='chip';c.textContent=u.name;c.dataset.i=i;c.onclick=()=>c.classList.toggle('selb');w.appendChild(c);});
+  renderFamList();
+}
+
+async function createFam(){
+  const name=document.getElementById('fn-name').value.trim();
+  const members=[...document.querySelectorAll('#fn-chips .chip.selb')].map(c=>parseInt(c.dataset.i));
+  if(!name||!members.length){alert('Nhập tên và chọn thành viên');return;}
+  S.families.push({id:'f'+Date.now(),name,members}); await sv();
+  document.getElementById('fn-name').value='';
+  document.querySelectorAll('#fn-chips .chip').forEach(c=>c.classList.remove('selb'));
+  flash('fn-ok'); renderFamList(); renderMemList();
+}
+
+function renderFamList(){
+  const el=document.getElementById('fam-list');
+  if(!S.families.length){el.innerHTML='<p style="font-size:13px;color:var(--color-text-secondary)">Chưa có</p>';return;}
+  const m=M();
+  el.innerHTML=S.families.map((f,fi)=>{
+    const fc=calcFamily(f,m);
+    return`<div class="card" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-weight:500">${f.name}</span><button class="btn btn-sm btn-danger" onclick="removeFam(${fi})">Xoá</button></div><div style="font-size:12px;color:var(--color-text-secondary)">${f.members.map(i=>S.users[i]?.name||'?').join(' · ')}</div><div style="font-size:13px;margin-top:6px">Tổng tháng này: <b class="blue">${fmt(fc.total)}</b></div></div>`;
+  }).join('');
+}
+
+async function removeFam(fi){if(!confirm('Xoá gia đình này?'))return;S.families.splice(fi,1);await sv();renderFamList();renderMemList();}
+
+function renderSettle(){
+  const m=M();
+  const bal=S.users.map((_,i)=>{const p=calcPersonal(i,m);return{idx:i,...p};});
+  const totalFood=S.market.filter(x=>x.month===m).reduce((s,x)=>s+x.amount,0);
+  const totalExp=S.expenses.filter(x=>x.month===m).reduce((s,x)=>s+x.amount,0);
+  document.getElementById('set-summary').innerHTML=`
+    <div class="row"><span style="font-size:13px">Tổng tiền chợ</span><span style="font-weight:500">${fmt(totalFood)}</span></div>
+    <div class="row"><span style="font-size:13px">Tổng chi phí chung</span><span style="font-weight:500">${fmt(totalExp)}</span></div>
+    <div class="row"><span style="font-size:13px;font-weight:500">Tổng cộng</span><span style="font-size:15px;font-weight:500">${fmt(totalFood+totalExp)}</span></div>
+    <div style="margin-top:10px">${bal.map(b=>`<div class="mbrow"><div class="avatar" style="${uColor(b.idx)}">${uInitial(b.idx)}</div><div style="flex:1;font-size:13px"><b>${S.users[b.idx]?.name||'?'}</b><br>Đã trả: ${fmt(b.paid)} · Phải trả: ${fmt(b.total)}</div><span class="${b.net>1?'pos':b.net<-1?'neg':''}">${b.net>0?'+':''}${fmt(b.net)}</span></div>`).join('')}</div>`;
+  const pos=bal.filter(b=>b.net>1).map(b=>({idx:b.idx,amt:b.net}));
+  const neg=bal.filter(b=>b.net<-1).map(b=>({idx:b.idx,amt:-b.net}));
+  const debts=[];let i=0,j=0;
+  const ps=pos.map(x=>({...x})),ng=neg.map(x=>({...x}));
+  while(i<ng.length&&j<ps.length){const a=Math.min(ng[i].amt,ps[j].amt);if(a>1)debts.push({from:ng[i].idx,to:ps[j].idx,amt:a});ng[i].amt-=a;ps[j].amt-=a;if(ng[i].amt<1)i++;if(ps[j].amt<1)j++;}
+  const de=document.getElementById('set-debts');
+  if(!debts.length) de.innerHTML='<span style="font-size:13px;color:var(--color-text-secondary)">Không có ai nợ ai</span>';
+  else de.innerHTML=debts.map(d=>`<div class="row"><span style="font-size:13px"><b>${S.users[d.from]?.name||'?'}</b> trả cho <b>${S.users[d.to]?.name||'?'}</b></span><span class="neg">${fmt(d.amt)}</span></div>`).join('');
+  const fe=document.getElementById('set-fam');
+  if(!S.families.length){fe.innerHTML='<p style="font-size:13px;color:var(--color-text-secondary)">Chưa có gia đình nào</p>';return;}
+  fe.innerHTML=S.families.map(f=>{
+    const fc=calcFamily(f,m);
+    let html=`<div style="margin-bottom:14px"><div style="font-weight:500;font-size:14px;margin-bottom:6px">🏡 ${f.name} <span class="badge">${f.members.map(i=>S.users[i]?.name||'?').join(', ')}</span></div>`;
+    html+=`<div class="row"><span style="font-size:13px">Tiền ăn + sinh hoạt</span><span>${fmt(fc.memberShare)}</span></div>`;
+    Object.entries(fc.bycat).forEach(([k,v])=>{html+=`<div class="row"><span style="font-size:13px">${CL(k)}</span><span>${fmt(v)}</span></div>`;});
+    html+=`<div class="row"><span style="font-size:14px;font-weight:600">Tổng chi tiêu GĐ</span><span style="font-size:15px;font-weight:600;color:#185FA5">${fmt(fc.total)}</span></div></div>`;
+    return html;
+  }).join('<hr class="divider"/>');
+}
+
+function renderAllData(){
+  const m=M();
+  const mkts=S.market.filter(x=>x.month===m);
+  document.getElementById('all-mkt').innerHTML=!mkts.length?'Chưa có':mkts.map(x=>`<div class="row-col"><div style="display:flex;justify-content:space-between"><b style="font-size:13px">${x.date}</b><b>${fmt(x.amount)}</b></div><div style="font-size:12px;color:var(--color-text-secondary)">${x.note||''} · ${x.meals.map(ML).join(' ')} · ${x.payers.map(i=>S.users[i]?.name||'?').join(', ')}</div></div>`).join('');
+  const exps=S.expenses.filter(x=>x.month===m);
+  document.getElementById('all-exp').innerHTML=!exps.length?'Chưa có':exps.map(x=>`<div class="row"><div><span style="font-size:13px">${x.note||'Chi phí chung'}</span><br><span style="font-size:11px;color:var(--color-text-secondary)">bởi ${S.users[x.by]?.name||'?'}</span></div><span>${fmt(x.amount)}</span></div>`).join('');
+  const fexps=S.famExp.filter(x=>x.month===m);
+  document.getElementById('all-fexp').innerHTML=!fexps.length?'Chưa có':fexps.map(x=>{const f=S.families.find(f=>f.id===x.fid);return`<div class="row"><div><span style="font-size:13px">${x.note||CL(x.cat)}</span><br><span style="font-size:12px;color:var(--color-text-secondary)">${f?.name||'?'} · ${CL(x.cat)} · ${x.date} · ${S.users[x.by]?.name||'?'}</span></div><span class="blue">${fmt(x.amount)}</span></div>`;}).join('');
+  const allm=S.meals.filter(x=>x.month===m);
+  document.getElementById('all-meals').innerHTML=!allm.length?'Chưa có':allm.map(x=>`<div class="row"><span style="font-size:13px"><b>${S.users[x.user]?.name||'?'}</b> · ${x.date}</span><span>${x.meals.map(ML).join(' ')}</span></div>`).join('');
+}
+
+async function closeMonth(){
+  if(!confirm('Kết tháng sẽ xoá toàn bộ giao dịch. Thành viên & gia đình giữ nguyên. Tiếp tục?'))return;
+  const m=M();
+  ['market','meals','expenses','famExp'].forEach(k=>{S[k]=S[k].filter(x=>x.month!==m);});
+  await sv(); renderSettle(); renderAllData(); alert('Đã kết tháng!');
+}
+
+load();
+</script>
